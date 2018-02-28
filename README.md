@@ -1,11 +1,39 @@
-## opengl es 2.0中加载.obj 与 .mtl
-
-![这里写图片描述](http://img.blog.csdn.net/20170814103635466?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveGlheGw=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
-## 参考：
-本文参考了[Rajawali](https://github.com/xiaxveliang/Rajawali)
+# Activity启动流程
 
 
+## 参考
+[Activity启动流程](http://blog.csdn.net/qq_23547831/article/details/51224992)
+[Android应用启动流程分析](http://solart.cc/2016/08/20/launch_app/)
+
+## Launcher启动App时序图
+
+该时序图来自：[Android应用启动流程分析](http://solart.cc/2016/08/20/launch_app/)
+
+![enter image description here](https://raw.githubusercontent.com/xiaxveliang/ActivityLaunchProcess/master/image/launcher_app.png)
+
+### [点击查看大图](https://raw.githubusercontent.com/xiaxveliang/ActivityLaunchProcess/master/image/launcher_app.png)
+
+## 简化流程
 
 
+```sequence
+participant Launcher进程 as serverA 
+participant ActivityManagerService进程 as serverB
+participant Zygote进程 as serverC
+participant 要启动的APP进程 as serverD
+serverA->serverB: startActivity
+serverB-->serverA: schedulePauseActivity
+serverA-->serverA: ActivityThread中Instrumentation调用onPause
+serverA->serverB: 通知AMS Launcher onPaused
+serverB->serverC: 创建新进程
+serverC->serverD: zygote fork创建新进程
+serverD-->serverD: ActivityThread执行main方法
+serverD-->serverB: 绑定Application
+serverB->serverD: scheduleLaunchActivity
+serverD-->serverD: Instrumentation调用onCreate onResume
+serverD-->serverB: ActivityResumed
+serverB-->serverA: scheduleStopActivity
+serverA-->serverA: onStop
+```
 
 
