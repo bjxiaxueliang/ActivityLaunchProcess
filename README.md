@@ -15,6 +15,7 @@
 
 ## 简化流程
 
+![enter image description here](https://raw.githubusercontent.com/xiaxveliang/ActivityLaunchProcess/master/image/001.png)
 
 ```sequence
 participant Launcher进程 as serverA 
